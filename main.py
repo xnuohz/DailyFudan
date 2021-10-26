@@ -6,7 +6,9 @@ from sys import argv as sys_argv
 from bs4 import BeautifulSoup
 
 
-def fudan_daily(username, passwd):
+
+
+def fudan_daily(username, passwd, successful_veri_code):
     # 伪造 UA
     headers = {
         "Origin": "https://zlapp.fudan.edu.cn",
@@ -18,6 +20,10 @@ def fudan_daily(username, passwd):
     data = {
         "username": username,
         "password": passwd
+    }
+
+    verification_code = {
+        "value": successful_veri_code
     }
 
     login_url = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
@@ -54,7 +60,7 @@ def fudan_daily(username, passwd):
     logging.info(pafd_data["area"])
     s.headers.update(headers)
     response = s.post(save_url, data=pafd_data)
-
+    
     logging.info(response.text)
 
 
@@ -62,4 +68,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     uid, pwd = sys_argv[1].strip().split(' ')
+    # TODO veri_code 
+
     fudan_daily(uid, pwd)
