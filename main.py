@@ -4,11 +4,11 @@ import logging
 
 from sys import argv as sys_argv
 from bs4 import BeautifulSoup
+from verification import easy_code_en  # code OCR func
 
 
 
-
-def fudan_daily(username, passwd, successful_veri_code):
+def fudan_daily(username, passwd):
     # 伪造 UA
     headers = {
         "Origin": "https://zlapp.fudan.edu.cn",
@@ -22,13 +22,11 @@ def fudan_daily(username, passwd, successful_veri_code):
         "password": passwd
     }
 
-    verification_code = {
-        "value": successful_veri_code
-    }
 
     login_url = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
     get_info_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info"
     save_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/save"
+    code_url = "https://zlapp.fudan.edu.cn/backend/default/code"  # for verification code img
 
     s = requests.Session()
     response = s.get(login_url)
@@ -45,6 +43,10 @@ def fudan_daily(username, passwd, successful_veri_code):
     old_pafd_data = json.loads(response.text)
     pafd_data = old_pafd_data["d"]["info"]
 
+    response_code = s.get(code_url)
+    # get code here:
+    code_vis = easy_code_en(code_url)
+
     pafd_data.update({
         "ismoved": 0,
         "number": old_pafd_data["d"]["uinfo"]["role"]["number"],
@@ -54,13 +56,14 @@ def fudan_daily(username, passwd, successful_veri_code):
         "province": old_pafd_data["d"]["oldInfo"]["province"],
         "sfhbtl": 0,
         "sfjcgrq": 0,
-        "sftgfxcs": 1
+        "sftgfxcs": 1,
+        "code": code_vis
     })
 
     logging.info(pafd_data["area"])
     s.headers.update(headers)
     response = s.post(save_url, data=pafd_data)
-    
+
     logging.info(response.text)
 
 
@@ -68,6 +71,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     uid, pwd = sys_argv[1].strip().split(' ')
-    # TODO veri_code 
-
     fudan_daily(uid, pwd)
