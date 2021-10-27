@@ -57,6 +57,7 @@ def fudan_daily(username, passwd):
         "sfhbtl": 0,
         "sfjcgrq": 0,
         "sftgfxcs": 1,
+        "sfzx": 1,
         "code": code_vis
     })
 
