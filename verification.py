@@ -1,8 +1,7 @@
 import easyocr
-import urllib.request
 
 
-def easy_code_en(path):
+def easy_code_en(code_response):
     """ Function to output the verification code from url using easyOCR
         By Alan Liu [alan_squirrel@outlook.com]
 
@@ -13,15 +12,17 @@ def easy_code_en(path):
         string: verification code
     """
 
-    code_res = "INITIAL"
-    try_time = 0
-    while len(code_res) != 4:
-        reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
-        urllib.request.urlretrieve(path, (str(try_time) + "test.png"))
+    img_data = code_response.content
+    newFile = open("code_img.png", "wb")
+    newFile.write(img_data)
+    newFile.close()
 
-        result = reader.readtext(str(try_time) + "test.png")
-        code_res = result[0][-2]
-        try_time += 1
+    reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
+    # urllib.request.urlretrieve(path, "code_image.png")
+
+    result = reader.readtext("code_img.png")
+    code_res = result[0][-2].replace(" ", "")
+
     return code_res
 
 

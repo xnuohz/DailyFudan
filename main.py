@@ -43,9 +43,9 @@ def fudan_daily(username, passwd):
     old_pafd_data = json.loads(response.text)
     pafd_data = old_pafd_data["d"]["info"]
 
-    response_code = s.get(code_url)
     # get code here:
-    code_vis = easy_code_en(code_url)
+    code_response = s.get(code_url)
+    code_vis = easy_code_en(code_response)
 
     pafd_data.update({
         "ismoved": 0,
@@ -62,6 +62,8 @@ def fudan_daily(username, passwd):
     })
 
     logging.info(pafd_data["area"])
+    logging.info(pafd_data["sfzx"])
+    logging.info(pafd_data["code"])
     s.headers.update(headers)
     response = s.post(save_url, data=pafd_data)
 
