@@ -18,8 +18,6 @@ def easy_code_en(code_response):
     newFile.close()
 
     reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
-    # urllib.request.urlretrieve(path, "code_image.png")
-
     result = reader.readtext("code_img.png")
     code_res = result[0][-2].replace(" ", "")
 

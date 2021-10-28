@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 from verification import easy_code_en  # code OCR func
 
 
-
 def fudan_daily(username, passwd):
     # 伪造 UA
     headers = {
@@ -21,7 +20,6 @@ def fudan_daily(username, passwd):
         "username": username,
         "password": passwd
     }
-
 
     login_url = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
     get_info_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info"
@@ -75,3 +73,4 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     uid, pwd = sys_argv[1].strip().split(' ')
     fudan_daily(uid, pwd)
+    
