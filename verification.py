@@ -22,5 +22,4 @@ def easy_code_en(code_response):
     code_res = result[0][-2].replace(" ", "")
 
     return code_res
-
-
+    
