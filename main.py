@@ -4,6 +4,7 @@ import logging
 
 from sys import argv as sys_argv
 from bs4 import BeautifulSoup
+from verification import easy_code_en  # code OCR func
 
 
 def fudan_daily(username, passwd):
@@ -23,6 +24,7 @@ def fudan_daily(username, passwd):
     login_url = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
     get_info_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info"
     save_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/save"
+    code_url = "https://zlapp.fudan.edu.cn/backend/default/code"  # for verification code img
 
     s = requests.Session()
     response = s.get(login_url)
@@ -39,6 +41,10 @@ def fudan_daily(username, passwd):
     old_pafd_data = json.loads(response.text)
     pafd_data = old_pafd_data["d"]["info"]
 
+    # get code here:
+    code_response = s.get(code_url)
+    code_vis = easy_code_en(code_response)
+
     pafd_data.update({
         "ismoved": 0,
         "number": old_pafd_data["d"]["uinfo"]["role"]["number"],
@@ -48,10 +54,14 @@ def fudan_daily(username, passwd):
         "province": old_pafd_data["d"]["oldInfo"]["province"],
         "sfhbtl": 0,
         "sfjcgrq": 0,
-        "sftgfxcs": 1
+        "sftgfxcs": 1,
+        "sfzx": 1,
+        "code": code_vis
     })
 
     logging.info(pafd_data["area"])
+    logging.info(pafd_data["sfzx"])
+    logging.info(pafd_data["code"])
     s.headers.update(headers)
     response = s.post(save_url, data=pafd_data)
 
@@ -63,3 +73,4 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     uid, pwd = sys_argv[1].strip().split(' ')
     fudan_daily(uid, pwd)
+    
