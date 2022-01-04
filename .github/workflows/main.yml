@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     # if: github.ref == 'refs/heads/master'
 
     steps:
@@ -23,18 +23,22 @@ jobs:
           fetch-depth: 0
           ref: master
 
-      - name: Auto merge
-        if: ${{ env.ALLOW_MERGE != 'false' }}
-        run: |
-          git config --global user.name  github-actions
-          git config --global user.email github-actions@github.com
-          git remote add upstream https://github.com/xnuohz/DailyFudan
-          git pull upstream master --allow-unrelated-histories
-          git push origin master
+      # - name: Auto merge
+      #   if: ${{ env.ALLOW_MERGE != 'false' }}
+      #   run: |
+      #     git config --global user.name  github-actions
+      #     git config --global user.email github-actions@github.com
+      #     git remote add upstream https://github.com/xnuohz/DailyFudan
+      #     git pull upstream master --allow-unrelated-histories
+      #     git push origin master
+<<<<<<< HEAD
+=======
+          
+>>>>>>> b294f90b3658f1795dad35c197c7141e2c0c8306
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.8
 
       - name: Random sleep
         if: github.event_name == 'schedule'
