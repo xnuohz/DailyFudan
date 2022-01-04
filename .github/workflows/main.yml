@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     # if: github.ref == 'refs/heads/master'
 
     steps:
@@ -31,6 +31,7 @@ jobs:
           git remote add upstream https://github.com/xnuohz/DailyFudan
           git pull upstream master --allow-unrelated-histories
           git push origin master
+
       - name: Set up python
         uses: actions/setup-python@v2
         with:

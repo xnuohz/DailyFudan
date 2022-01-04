@@ -15,12 +15,6 @@ def fudan_daily(username, passwd):
         "Referer": "https://zlapp.fudan.edu.cn/site/ncov/fudanDaily?from=history"
     }
 
-    # 学号 & UIS密码
-    data = {
-        "username": username,
-        "password": passwd
-    }
-
     login_url = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
     get_info_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info"
     save_url = "https://zlapp.fudan.edu.cn/ncov/wap/fudan/save"
@@ -32,6 +26,17 @@ def fudan_daily(username, passwd):
     soup = BeautifulSoup(content, "lxml")
     inputs = soup.find_all("input")
 
+    # get the login verification code
+    login_code_response = s.get(code_url)
+    login_code_vis = easy_code_en(login_code_response, "login.png")
+    
+    # 学号 & UIS密码
+    data = {
+        "username": username,
+        "password": passwd,
+        "verifyCode": login_code_vis 
+    }
+
     for i in inputs[2::]:
         data[i.get("name")] = i.get("value")
 
@@ -41,9 +46,9 @@ def fudan_daily(username, passwd):
     old_pafd_data = json.loads(response.text)
     pafd_data = old_pafd_data["d"]["info"]
 
-    # get code here:
-    code_response = s.get(code_url)
-    code_vis = easy_code_en(code_response)
+    # get checin code here:
+    checkin_code_response = s.get(code_url)
+    checkin_code_vis = easy_code_en(checkin_code_response, "checkin.png")
 
     pafd_data.update({
         "ismoved": 0,
@@ -56,7 +61,7 @@ def fudan_daily(username, passwd):
         "sfjcgrq": 0,
         "sftgfxcs": 1,
         "sfzx": 1,
-        "code": code_vis
+        "code": checkin_code_vis
     })
 
     logging.info(pafd_data["area"])
