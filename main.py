@@ -76,6 +76,6 @@ def fudan_daily(username, passwd):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
-    uid, pwd = sys_argv[1].strip().split(',')
+    uid, pwd = sys_argv[1].strip().split(' ')
     fudan_daily(uid, pwd)
     
