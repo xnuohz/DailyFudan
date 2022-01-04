@@ -23,14 +23,14 @@ jobs:
           fetch-depth: 0
           ref: master
 
-      - name: Auto merge
-        if: ${{ env.ALLOW_MERGE != 'false' }}
-        run: |
-          git config --global user.name  github-actions
-          git config --global user.email github-actions@github.com
-          git remote add upstream https://github.com/xnuohz/DailyFudan
-          git pull upstream master --allow-unrelated-histories
-          git push origin master
+      # - name: Auto merge
+      #   if: ${{ env.ALLOW_MERGE != 'false' }}
+      #   run: |
+      #     git config --global user.name  github-actions
+      #     git config --global user.email github-actions@github.com
+      #     git remote add upstream https://github.com/xnuohz/DailyFudan
+      #     git pull upstream master --allow-unrelated-histories
+      #     git push origin master
       - name: Set up python
         uses: actions/setup-python@v2
         with:
