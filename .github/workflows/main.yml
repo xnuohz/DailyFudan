@@ -28,6 +28,7 @@ jobs:
         run: |
           git config --global user.name  github-actions
           git config --global user.email github-actions@github.com
+          git config pull.rebase false
           git remote add upstream https://github.com/xnuohz/DailyFudan
           git pull upstream master --allow-unrelated-histories
           git push origin master
